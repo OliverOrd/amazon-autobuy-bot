@@ -1,0 +1,39 @@
+#Config File
+
+driver_file_path: ./chromedriver
+
+#Debug levels
+# 0 - shows no errors
+# 1 - shows specific errors
+# 2 - shows all errors 
+debug: 0
+
+#ENSURE THAT YOU TEST WITH GUI BEFORE SETTING headless_mode to True
+#Only tested 
+headless_mode: False
+
+#Refresh time (in seconds) of 5 has a total delay of about 15 seconds per cycle
+#this is dependent on network speed and computer performance.
+refresh_time: 5
+
+#To enable or disable discord notifications
+#If True, ensure id and webhook is filled in secrets.yaml
+discord: True
+
+#Not used at the moment
+#10 recommended for selenium
+#action_delay: 10
+
+#You may need to change these values, particularly width to make sure
+#the Currys site is in desktop mode (desktop breakpoint)
+browser_width: 1400
+browser_height: 1000
+
+#Enter the product_page url for the items you wish to buy
+product_data:
+  - 
+    name: Nintendo Switch
+    asin: B07W6HNZNW
+  - 
+    name: Change Me
+    asin: B07W6HNZNW

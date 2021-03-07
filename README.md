@@ -24,7 +24,7 @@ The Chrome driver should be named ```chromedriver``` and placed in the project r
 
 <br/>
 
-### You are about ready to get your item from Currys PC.
+### You are almost ready to get your item from Amazon.
 
 Rename the file ```secrets-template.yaml``` to ```secrets.yaml``` and fill in your personal details.
 

@@ -1,3 +1,0 @@
-PyYAML
-Selenium
-discord-webhook

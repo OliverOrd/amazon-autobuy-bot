@@ -32,7 +32,7 @@ Rename the file ```secrets-template.yaml``` to ```secrets.yaml``` and fill in yo
 
 ### Launching the bot
 
-Fill in the Product Name and ASIN values under product_data in the '''conf.yaml''' file to setup bot instances.
+Enter the "name", "max_price" and "asin" values for the products that you want to buy in the '''conf.yaml''' file to setup a bot instance per product.
 
 Then run the command:
 ```python amazon.py```

@@ -82,6 +82,12 @@ def send_notif6():
 def send_notif7():
   webhook = DiscordWebhook(url=webhook_url,
                   content='{} Test Mode Completed Unsuccessfully, Item has NOT been purchased!'.format(myid))
+  response = webhook.execute
+  
+def send_notif8(product,price_str):
+  item_price = product['max_price']
+  webhook = DiscordWebhook(url=webhook_url,
+                  content='{} Product price: {} is greater than max_price £{}'.format(myid, price_str, item_price))
   response = webhook.execute()
 
 def run_bot_instance(driver_instance, product, product_index):
@@ -97,6 +103,7 @@ def run_bot_instance(driver_instance, product, product_index):
 
   #Destructure product
   item_name = product['name']
+  item_max = int(product['max_price'])
   item_qty = 1
   base_url = 'https://www.amazon.co.uk/dp/'
   item_asin = product['asin']
@@ -111,11 +118,10 @@ def run_bot_instance(driver_instance, product, product_index):
   except:
     pass
 
-  stock = False
-  count = False
+  purchased = False
   # store_collection = False
 
-  while not stock:
+  while not purchased:
   
     checkout_page = False
     payment_page = False
@@ -129,41 +135,24 @@ def run_bot_instance(driver_instance, product, product_index):
       except:
         pass
     
-    #Sign in
-    WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="nav-link-accountList"]'))).click()
-    
-    #enter email
-    amazon_email = WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="ap_email"]')))
-    amazon_email.clear()
-    amazon_email.send_keys(secrets['email'])
-      
-    time.sleep(1)
-      
-    #Submit email
-    WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="continue"]'))).click()
-      
-    #enter password
-    amazon_password = WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="ap_password"]')))
-    amazon_password.clear()
-    amazon_password.send_keys(secrets['password'])
-      
-    #Submit password
-    WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="signInSubmit"]'))).click()
-    
     time.sleep(1)
 
     try:
     
       price_str = driver.find_element_by_xpath('//*[@id="priceblock_ourprice"]').text
+      price_str = price_str.replace(',', '')
       price_int = int(float(price_str[1:]))
       
       if config['discord']:
         send_notif(item_url,product,price_str)
       
-      if (int(price_int) < 80):
+      if (int(price_int) < item_max):
         add_to_basket = WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="buy-now-button"]'))).click()
         if config['discord']:
             send_notif2(item_url,product)
+      else:
+        send_notif8(product,price_str)
+        raise ValueError('price > max_price')
             
       time.sleep(1)
             
@@ -207,18 +196,18 @@ def run_bot_instance(driver_instance, product, product_index):
           print('Test Mode Completed Successfully! Item was not purchased. Returning to product page for {}'.format(item_name))
           if config['discord']:
             send_notif6()
-          time.sleep(120)
+          time.sleep(1)
         except:
           print('Test Mode Completed Unsuccessfully! Item was not purchased. Returning to product page for {}'.format(item_name))
           if config['discord']:
             send_notif7()
-          time.sleep(120)
+          time.sleep(1)
       else:
         WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="submitOrderButtonId"]/span/input'))).click()
         purchased = True
         if config['discord']:
           send_notif3(item_url,product,price_str)
-        time.sleep(120)
+        time.sleep(1)
 
     except Exception as e:
       if config['debug'] == 1:

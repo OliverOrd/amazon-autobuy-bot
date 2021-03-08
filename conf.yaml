@@ -12,6 +12,13 @@ debug: 0
 #Only tested 
 headless_mode: False
 
+#To disable purchases and keep notifications
+disable_purchase: False
+
+#Checkout addon True is needed for products that have a
+#care/protection plan pop-up
+checkout_addon: True
+
 #Refresh time (in seconds) of 5 has a total delay of about 15 seconds per cycle
 #this is dependent on network speed and computer performance.
 refresh_time: 5
@@ -29,11 +36,14 @@ discord: True
 browser_width: 1400
 browser_height: 1000
 
-#Enter the product_page url for the items you wish to buy
+#Enter the product name, asin and max_price for the items you wish to buy
+#Enter a whole number for max_price in the format shown below.
 product_data:
   - 
     name: Nintendo Switch
+    max_price: 500
     asin: B07W6HNZNW
   - 
-    name: Change Me
-    asin: B07W6HNZNW
+    name: Test Change Me
+    max_price: 800
+    asin: B08WB6R2K4

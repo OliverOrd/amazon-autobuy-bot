@@ -49,7 +49,39 @@ def create_driver():
 def send_notif(message,product,price_str):
   item_name = product['name']
   webhook = DiscordWebhook(url=webhook_url,
-                  content='{} Stock is available for {} at {}\n{}'.format(myid, item_name, price_str, message))
+                  content='{} Stock is available for: {} at {}\n{}'.format(myid, item_name, price_str, message))
+  response = webhook.execute()
+  
+def send_notif2(message,product):
+  item_name = product['name']
+  webhook = DiscordWebhook(url=webhook_url,
+                  content='{} Attempted to add product to basket: {}\n{}'.format(myid, item_name, message))
+  response = webhook.execute()
+  
+def send_notif3(message,product,price_str):
+  item_name = product['name']
+  webhook = DiscordWebhook(url=webhook_url,
+                  content='{} Product has been purchased: {} for {}\n{}'.format(myid, item_name, price_str, message))
+  response = webhook.execute()
+  
+def send_notif4():
+  webhook = DiscordWebhook(url=webhook_url,
+                  content='{} Amazon Insurance Popup has been closed successfully'.format(myid))
+  response = webhook.execute()
+  
+def send_notif5():
+  webhook = DiscordWebhook(url=webhook_url,
+                  content='{} Payment Page has been reached successfully!'.format(myid))
+  response = webhook.execute()
+  
+def send_notif6():
+  webhook = DiscordWebhook(url=webhook_url,
+                  content='{} Test Mode Completed Successfully, Item has NOT been purchased!'.format(myid))
+  response = webhook.execute()
+  
+def send_notif7():
+  webhook = DiscordWebhook(url=webhook_url,
+                  content='{} Test Mode Completed Unsuccessfully, Item has NOT been purchased!'.format(myid))
   response = webhook.execute()
 
 def run_bot_instance(driver_instance, product, product_index):
@@ -86,6 +118,7 @@ def run_bot_instance(driver_instance, product, product_index):
   while not stock:
   
     checkout_page = False
+    payment_page = False
 
     if driver.current_url != item_url:
       driver.get(item_url)
@@ -95,17 +128,97 @@ def run_bot_instance(driver_instance, product, product_index):
         WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//button[contains(text(), "Accept All Cookies")]'))).click()
       except:
         pass
+    
+    #Sign in
+    WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="nav-link-accountList"]'))).click()
+    
+    #enter email
+    amazon_email = WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="ap_email"]')))
+    amazon_email.clear()
+    amazon_email.send_keys(secrets['email'])
+      
+    time.sleep(1)
+      
+    #Submit email
+    WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="continue"]'))).click()
+      
+    #enter password
+    amazon_password = WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="ap_password"]')))
+    amazon_password.clear()
+    amazon_password.send_keys(secrets['password'])
+      
+    #Submit password
+    WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="signInSubmit"]'))).click()
+    
+    time.sleep(1)
 
     try:
-      add_to_basket = WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="buy-now-button"]')))
-      
+    
       price_str = driver.find_element_by_xpath('//*[@id="priceblock_ourprice"]').text
+      price_int = int(float(price_str[1:]))
       
-      checkout_page = True
       if config['discord']:
         send_notif(item_url,product,price_str)
-
+      
+      if (int(price_int) < 80):
+        add_to_basket = WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="buy-now-button"]'))).click()
+        if config['discord']:
+            send_notif2(item_url,product)
+            
       time.sleep(1)
+            
+      if config['checkout_addon']:
+        try:
+          close_dialog = WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="siNoCoverage-announce"]'))).click()
+          if config['discord']:
+            send_notif4()
+        except:
+          pass
+        
+      checkout_page = True
+      
+      #enter email
+      amazon_email = WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="ap_email"]')))
+      amazon_email.clear()
+      amazon_email.send_keys(secrets['email'])
+      
+      time.sleep(1)
+      
+      #Submit email
+      WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="continue"]'))).click()
+      
+      #enter password
+      amazon_password = WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="ap_password"]')))
+      amazon_password.clear()
+      amazon_password.send_keys(secrets['password'])
+      
+      #Submit password
+      WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="signInSubmit"]'))).click()
+      
+      payment_page = True
+      if config['discord']:
+        send_notif5()
+      time.sleep(1)
+      
+      #Buy Item
+      if config['disable_purchase']:
+        try:
+          WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="submitOrderButtonId"]/span/input')))
+          print('Test Mode Completed Successfully! Item was not purchased. Returning to product page for {}'.format(item_name))
+          if config['discord']:
+            send_notif6()
+          time.sleep(120)
+        except:
+          print('Test Mode Completed Unsuccessfully! Item was not purchased. Returning to product page for {}'.format(item_name))
+          if config['discord']:
+            send_notif7()
+          time.sleep(120)
+      else:
+        WebDriverWait(driver, driver_wait).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="submitOrderButtonId"]/span/input'))).click()
+        purchased = True
+        if config['discord']:
+          send_notif3(item_url,product,price_str)
+        time.sleep(120)
 
     except Exception as e:
       if config['debug'] == 1:
@@ -126,6 +239,11 @@ def run_bot_instance(driver_instance, product, product_index):
     # pync.notify("Stock available for " + site_link, open=site_link)
 
 if __name__ == "__main__":
+
+  if config['disable_purchase']:
+    print('\nINFO: Test Mode is enabled. No Purchases will be made!')
+  else:
+    print('\nINFO: Test Mode is disabled. Purchase will be attempted!')
 
   counter = 0
   no_of_items = len(config['product_data'])

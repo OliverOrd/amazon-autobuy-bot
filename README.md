@@ -1,5 +1,5 @@
-# Amazon Stock Alerts
-This code is a modified version of currys-pc-order-bot by abayomi185. It is designed to alert you when a product comes back in stock on Amazon.
+# Amazon In Stock Alerts
+This code is a modified version of [Currys-PC-Order-Bot](https://github.com/abayomi185/currys-pc-order-bot) by [abayomi185](https://github.com/abayomi185). It is designed to alert you when a product comes back in stock on Amazon.
 <br>
 > Use this software at YOUR OWN RISK. This software offers no guarantee. I do not assume any risk you might incure from using this software.
 
@@ -24,7 +24,7 @@ The Chrome driver should be named ```chromedriver``` and placed in the project r
 
 <br/>
 
-### You are about ready to get your item from Currys PC.
+### You are almost ready to get your item from Amazon.
 
 Rename the file ```secrets-template.yaml``` to ```secrets.yaml``` and fill in your personal details.
 
@@ -32,7 +32,7 @@ Rename the file ```secrets-template.yaml``` to ```secrets.yaml``` and fill in yo
 
 ### Launching the bot
 
-Fill in the Name and ASIN values under product_data in the '''conf.yaml''' file to setup bot instances.
+Fill in the Product Name and ASIN values under product_data in the '''conf.yaml''' file to setup bot instances.
 
 Then run the command:
 ```python amazon.py```

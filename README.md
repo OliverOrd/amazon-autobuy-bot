@@ -1,5 +1,5 @@
 # Amazon In Stock Alerts
-This code is a modified version of [Currys-PC-Order-Bot](https://github.com/abayomi185/currys-pc-order-bot) by [abayomi185](https://github.com/abayomi185). It is designed to alert you when a product comes back in stock on Amazon.
+This code is a modified version of [Currys-PC-Order-Bot](https://github.com/abayomi185/currys-pc-order-bot) by [abayomi185](https://github.com/abayomi185). It is designed to alert you when a product comes back in stock on Amazon. The bot will also attempt to purchase the product for you if the price isn't too high.
 <br>
 > Use this software at YOUR OWN RISK. This software offers no guarantee. I do not assume any risk you might incure from using this software.
 

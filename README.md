@@ -1,5 +1,5 @@
 # Amazon In Stock Alerts
-I modified [Currys-PC-Order-Bot](https://github.com/OliverOrd/currys-pc-order-bot) created by [abayomi185](https://github.com/abayomi185) to work with Amazon instead of Currys. The program will send you a discord alert when a desired product is in stock on Amazon. The bot will also attempt to purchase the product for you if the price isn't too high.
+I modified [Currys-PC-Order-Bot](https://github.com/OliverOrd/currys-pc-order-bot) created by [abayomi185](https://github.com/abayomi185) to automatically purchase items on Amazon instead of Currys. The program will send you a discord alert when a desired product is in stock on Amazon. The bot will also attempt to purchase the product for you if the price isn't too high.
 <br>
 > Use this software at YOUR OWN RISK. This software offers no guarantee. I do not assume any risk you might incure from using this software.
 

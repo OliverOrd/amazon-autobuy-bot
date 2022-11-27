@@ -1,4 +1,4 @@
-# Amazon In Stock Alerts
+# Amazon Auto Buy Bot
 I modified [Currys-PC-Order-Bot](https://github.com/OliverOrd/currys-pc-order-bot) created by [abayomi185](https://github.com/abayomi185) to automatically purchase items on Amazon instead of Currys. 
 <br/>
 <br/>
